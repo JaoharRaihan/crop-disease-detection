@@ -18,6 +18,12 @@ const MAPPING = {
   'paperplane.fill': 'send',
   'chevron.left.forwardslash.chevron.right': 'code',
   'chevron.right': 'chevron-right',
+  'leaf.fill': 'eco', // Agriculture/leaf icon
+  'book.fill': 'menu-book', // Book icon for education
+  'camera.fill': 'camera-alt', // Camera icon
+  'photo.fill': 'photo', // Gallery icon
+  'checkmark.circle.fill': 'check-circle', // Success icon
+  'magnifyingglass': 'search', // Search/analyze icon
 } as IconMapping;
 
 /**

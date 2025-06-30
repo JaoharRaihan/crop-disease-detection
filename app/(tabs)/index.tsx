@@ -6,6 +6,12 @@ import { View, Text, StyleSheet, TouchableOpacity, Image, Alert, Platform, SafeA
 import * as ImagePicker from 'expo-image-picker';
 import classLabels from '../../constants/class_labels.json';
 
+// Get screen dimensions for responsive design
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+const isWeb = Platform.OS === 'web';
+const isDesktop = isWeb && screenWidth >= 1024;
+const isTablet = screenWidth >= 768 && screenWidth < 1024;
+
 const HomeScreen = () => {
   // const [efficientnetSession, setEfficientnetSession] = useState<InferenceSession | null>(null);
   const [classificationResult, setClassificationResult] = useState<string>('');
@@ -277,7 +283,11 @@ const HomeScreen = () => {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView 
         style={styles.scrollView}
-        contentContainerStyle={styles.container}
+        contentContainerStyle={[
+          styles.container,
+          isDesktop && styles.desktopContainer,
+          isTablet && styles.tabletContainer
+        ]}
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl
@@ -288,9 +298,13 @@ const HomeScreen = () => {
           />
         }
       >
-        <View style={styles.header}>
-          <Text style={styles.title}>ফসলের রোগ সনাক্তকরণ</Text>
-          <Text style={styles.subtitle}>AI দিয়ে ফসলের রোগ নির্ণয় করুন</Text>
+        <View style={[styles.header, isDesktop && styles.desktopHeader]}>
+          <Text style={[styles.title, isDesktop && styles.desktopTitle]}>
+            ফসলের রোগ সনাক্তকরণ
+          </Text>
+          <Text style={[styles.subtitle, isDesktop && styles.desktopSubtitle]}>
+            AI দিয়ে ফসলের রোগ নির্ণয় করুন
+          </Text>
           <View style={styles.statsContainer}>
             <View style={styles.statItem}>
               <Text style={styles.statNumber}>{analysisCount}</Text>
@@ -309,11 +323,13 @@ const HomeScreen = () => {
           </View>
         </View>
 
-        <View style={styles.actionSection}>
-          <Text style={styles.sectionTitle}>📸 ছবি আপলোড করুন</Text>
+        <View style={[styles.actionSection, isDesktop && styles.desktopActionSection]}>
+          <Text style={[styles.sectionTitle, isDesktop && styles.desktopSectionTitle]}>
+            📸 ছবি আপলোড করুন
+          </Text>
           <View style={styles.buttonRow}>
             <TouchableOpacity 
-              style={styles.button} 
+              style={[styles.button, isDesktop && styles.desktopButton]} 
               onPress={selectImage}
               activeOpacity={0.7}
               onPressIn={() => {
@@ -330,11 +346,13 @@ const HomeScreen = () => {
               }}
             >
               <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
-                <Text style={styles.buttonText}>🖼️ গ্যালারি</Text>
+                <Text style={[styles.buttonText, isDesktop && styles.desktopButtonText]}>
+                  🖼️ গ্যালারি
+                </Text>
               </Animated.View>
             </TouchableOpacity>
             <TouchableOpacity 
-              style={styles.cameraButton} 
+              style={[styles.cameraButton, isDesktop && styles.desktopButton]} 
               onPress={openCamera}
               activeOpacity={0.7}
               onPressIn={() => {
@@ -351,17 +369,24 @@ const HomeScreen = () => {
               }}
             >
               <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
-                <Text style={styles.buttonText}>📷 ক্যামেরা</Text>
+                <Text style={[styles.buttonText, isDesktop && styles.desktopButtonText]}>
+                  📷 ক্যামেরা
+                </Text>
               </Animated.View>
             </TouchableOpacity>
           </View>
         </View>
         
         {selectedImage && (
-          <View style={styles.imageContainer}>
-            <Text style={styles.sectionTitle}>🖼️ নির্বাচিত ছবি</Text>
+          <View style={[styles.imageContainer, isDesktop && styles.desktopImageContainer]}>
+            <Text style={[styles.sectionTitle, isDesktop && styles.desktopSectionTitle]}>
+              🖼️ নির্বাচিত ছবি
+            </Text>
             <View style={styles.imageWrapper}>
-              <Image source={{ uri: selectedImage }} style={styles.image} />
+              <Image 
+                source={{ uri: selectedImage }} 
+                style={[styles.image, isDesktop && styles.desktopImage]} 
+              />
               {isLoading && (
                 <View style={styles.loadingOverlay}>
                   <ActivityIndicator size="large" color="#4caf50" />
@@ -370,11 +395,15 @@ const HomeScreen = () => {
               )}
             </View>
             <TouchableOpacity 
-              style={[styles.analyzeButton, isLoading && styles.disabledButton]} 
+              style={[
+                styles.analyzeButton, 
+                isDesktop && styles.desktopButton,
+                isLoading && styles.disabledButton
+              ]} 
               onPress={() => runClassification(selectedImage)}
               disabled={isLoading}
             >
-              <Text style={styles.buttonText}>
+              <Text style={[styles.buttonText, isDesktop && styles.desktopButtonText]}>
                 {isLoading ? '🔄 বিশ্লেষণ করা হচ্ছে...' : '🔍 বিশ্লেষণ করুন'}
               </Text>
             </TouchableOpacity>
@@ -382,8 +411,10 @@ const HomeScreen = () => {
         )}
 
         {classificationResult && (
-          <View style={styles.resultContainer}>
-            <Text style={styles.sectionTitle}>🎯 বিশ্লেষণ ফলাফল</Text>
+          <View style={[styles.resultContainer, isDesktop && styles.desktopResultContainer]}>
+            <Text style={[styles.sectionTitle, isDesktop && styles.desktopSectionTitle]}>
+              🎯 বিশ্লেষণ ফলাফল
+            </Text>
             <Text style={styles.resultText}>🌿 {classificationResult}</Text>
             {confidence > 0 && (
               <View style={styles.confidenceContainer}>
@@ -422,9 +453,11 @@ const HomeScreen = () => {
         )}
 
         {/* Weather Section */}
-        <View style={styles.weatherContainer}>
+        <View style={[styles.weatherContainer, isDesktop && styles.desktopWeatherContainer]}>
           <View style={styles.weatherHeaderRow}>
-            <Text style={styles.sectionTitle}>🌤️ আজকের আবহাওয়া</Text>
+            <Text style={[styles.sectionTitle, isDesktop && styles.desktopSectionTitle]}>
+              🌤️ আজকের আবহাওয়া
+            </Text>
             <View style={styles.districtIndicator}>
               <Text style={styles.districtCounter}>
                 {currentWeatherIndex + 1}/{weatherData.length}
@@ -476,8 +509,10 @@ const HomeScreen = () => {
         </View>
 
         {/* Daily Market Rates Section */}
-        <View style={styles.marketSection}>
-          <Text style={styles.sectionTitle}>💰 আজকের বাজার দর</Text>
+        <View style={[styles.marketSection, isDesktop && styles.desktopMarketSection]}>
+          <Text style={[styles.sectionTitle, isDesktop && styles.desktopSectionTitle]}>
+            💰 আজকের বাজার দর
+          </Text>
           <View style={styles.priceGrid}>
             <View style={styles.priceCard}>
               <Text style={styles.priceIcon}>🌾</Text>
@@ -514,8 +549,10 @@ const HomeScreen = () => {
         </View>
 
         {/* Government Loan Schemes Section */}
-        <View style={styles.schemesSection}>
-          <Text style={styles.sectionTitle}>🏛️ সরকারি ঋণ সুবিধা</Text>
+        <View style={[styles.schemesSection, isDesktop && styles.desktopSchemesSection]}>
+          <Text style={[styles.sectionTitle, isDesktop && styles.desktopSectionTitle]}>
+            🏛️ সরকারি ঋণ সুবিধা
+          </Text>
           <View style={styles.schemeCard}>
             <Text style={styles.schemeIcon}>💳</Text>
             <Text style={styles.schemeName}>কৃষি ঋণ কার্ড</Text>
@@ -1647,6 +1684,104 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 8,
     letterSpacing: 0.2,
+  },
+
+  // ===== RESPONSIVE STYLES =====
+  desktopContainer: {
+    maxWidth: 1400,
+    alignSelf: 'center',
+    paddingHorizontal: 40,
+    paddingTop: 20,
+    flexDirection: 'column',
+  },
+  
+  tabletContainer: {
+    maxWidth: 1000,
+    alignSelf: 'center',
+    paddingHorizontal: 30,
+  },
+
+  desktopHeader: {
+    paddingVertical: 50,
+    paddingHorizontal: 80,
+    marginBottom: 50,
+    borderRadius: 32,
+  },
+
+  desktopTitle: {
+    fontSize: 48,
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+
+  desktopSubtitle: {
+    fontSize: 22,
+    marginBottom: 30,
+    textAlign: 'center',
+  },
+
+  desktopSectionTitle: {
+    fontSize: 28,
+    marginBottom: 24,
+    textAlign: 'center',
+  },
+
+  desktopButton: {
+    padding: 24,
+    borderRadius: 24,
+    minHeight: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  desktopButtonText: {
+    fontSize: 20,
+    fontWeight: '700',
+  },
+
+  desktopImage: {
+    width: 450,
+    height: 450,
+    borderRadius: 32,
+    borderWidth: 4,
+    borderColor: '#c8e6c9',
+  },
+
+  desktopImageContainer: {
+    padding: 40,
+    marginBottom: 40,
+    borderRadius: 32,
+    alignItems: 'center',
+  },
+
+  desktopActionSection: {
+    padding: 40,
+    marginBottom: 40,
+    borderRadius: 32,
+  },
+
+  desktopResultContainer: {
+    padding: 40,
+    marginBottom: 40,
+    borderRadius: 32,
+  },
+
+  desktopWeatherContainer: {
+    padding: 40,
+    marginBottom: 40,
+    borderRadius: 32,
+  },
+
+  desktopMarketSection: {
+    padding: 40,
+    marginBottom: 40,
+    borderRadius: 32,
+  },
+
+  desktopSchemesSection: {
+    padding: 40,
+    marginBottom: 40,
+    borderRadius: 32,
   },
 });
 
