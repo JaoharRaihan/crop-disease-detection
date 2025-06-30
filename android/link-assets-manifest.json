@@ -1,0 +1,13 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/models/efficientnet_b3_crop_disease.onnx",
+      "sha1": "2bb4362d30cae783e2a89323eaac31569cd62475"
+    },
+    {
+      "path": "assets/models/yolov8m.onnx",
+      "sha1": "a08d49d9494ba071e4997dbb1702ac0bfe8ecce3"
+    }
+  ]
+}
