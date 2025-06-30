@@ -1,5 +1,13 @@
 # 🚀 Deployment Status: READY FOR VERCEL
 
+## ⚠️ UPDATE: CLI Issues Encountered
+
+**Current Status**: Vercel CLI is experiencing errors during deployment setup. However, all files are ready for deployment via the Vercel Dashboard.
+
+**Error**: `TypeError: Cannot read properties of undefined (reading 'value')`
+
+**Solution**: Deploy using Vercel Dashboard with GitHub integration (recommended approach).
+
 ## ✅ Completed Configuration
 
 Your **Crop Disease Detection App** is now fully configured and ready for Vercel deployment!
